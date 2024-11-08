@@ -1,5 +1,6 @@
 #############################################
- # @@@ Author: Ariel Araújo dos Santos @@@ #
+# @@@ Author: Ariel Araújo dos Santos @@@
+# ig: arielsantos074 #
 #############################################
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -14,6 +15,7 @@ class DownloadThread(QThread):
         super().__init__()
         self.url = url
         self.options = options
+
 
     def run(self):
         with YoutubeDL(self.options) as ydl:
@@ -31,8 +33,9 @@ class Ui_MainWindow(object):
 
         MainWindow.setLayoutDirection(QtCore.Qt.LeftToRight)
         MainWindow.setStyleSheet("#MainWindow{ background-color: #FF0000; }")
+        MainWindow.setFixedSize(738, 313)  # Impede aumentar o tamanho
 
-        MainWindow.setWindowIcon(QtGui.QIcon("C:/Users/Ariel/PycharmProjects/Scripts/Ytb/Img/icon.png"))
+        MainWindow.setWindowIcon(QtGui.QIcon("C:/Users/Ariel/PycharmProjects/Scripts/Ytb/Img/icon.ico"))
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -145,10 +148,13 @@ class Ui_MainWindow(object):
                 self.thread.progress_signal.connect(self.on_download_complete)
                 self.thread.start()
             #Condição para saber se mp4 foi selecionado
-            elif self.rb_mp4.isChecked():
+            if self.rb_mp4.isChecked():
                 options = {
-                    'format': 'best',
-                    'outtmpl': f"{diretorio_musica}/{titulo}.mp4",  # Salva como MP4 na pasta de Músicas
+                    'format': 'bestvideo+bestaudio/best',  # Baixar melhor vídeo e áudio
+                    'outtmpl': f"{diretorio_musica}/{titulo}.%(ext)s",  # Salva com a extensão correta
+                    'merge_output_format': 'mp4',  # Mescla o vídeo e áudio em um arquivo MP4
+                    'noplaylist': True,  # Não baixar listas de reprodução
+                    'nocheckcertificate': True,  # Ignorar problemas de certificado SSL
                 }
                 self.label_3.setText("Baixando...")
                 self.thread = DownloadThread(url, options)
@@ -157,6 +163,8 @@ class Ui_MainWindow(object):
     #Mudal o label para download
     def on_download_complete(self):
             self.label_3.setText("Download concluído!")  # Atualiza o texto após o download
+            self.thread.quit() #Finalizou corretamente
+            self.thread.wait() 
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
