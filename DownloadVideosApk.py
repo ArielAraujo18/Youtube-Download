@@ -150,11 +150,11 @@ class Ui_MainWindow(object):
             #Condição para saber se mp4 foi selecionado
             if self.rb_mp4.isChecked():
                 options = {
-                    'format': 'bestvideo+bestaudio/best',  # Baixar melhor vídeo e áudio
-                    'outtmpl': f"{diretorio_musica}/{titulo}.%(ext)s",  # Salva com a extensão correta
-                    'merge_output_format': 'mp4',  # Mescla o vídeo e áudio em um arquivo MP4
-                    'noplaylist': True,  # Não baixar listas de reprodução
-                    'nocheckcertificate': True,  # Ignorar problemas de certificado SSL
+                    'format': 'bestvideo+bestaudio/best',
+                    'outtmpl': f"{diretorio_musica}/{titulo}.%(ext)s",  
+                    'merge_output_format': 'mp4', 
+                    'noplaylist': True,  
+                    'nocheckcertificate': True,  
                 }
                 self.label_3.setText("Baixando...")
                 self.thread = DownloadThread(url, options)
@@ -162,8 +162,8 @@ class Ui_MainWindow(object):
                 self.thread.start()
     #Mudal o label para download
     def on_download_complete(self):
-            self.label_3.setText("Download concluído!")  # Atualiza o texto após o download
-            self.thread.quit() #Finalizou corretamente
+            self.label_3.setText("Download concluído!")  
+            self.thread.quit() 
             self.thread.wait() 
 
     def retranslateUi(self, MainWindow):
@@ -176,7 +176,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Link:"))
         self.label_3.setText(_translate("MainWindow", "Youtube Download"))
 
-#Inicializador
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
